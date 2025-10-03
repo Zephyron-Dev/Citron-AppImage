@@ -27,6 +27,7 @@ pacman -Syu --noconfirm \
 	ninja               \
 	nlohmann-json       \
 	openal              \
+	pkg-config          \
 	pipewire-audio      \
 	pulseaudio          \
 	pulseaudio-alsa     \
@@ -90,7 +91,6 @@ cmake .. \
 	-DUSE_QT_MULTIMEDIA=OFF \
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_DISABLE_FIND_PACKAGE_Git=ON \
-	-DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON \
 	-DCMAKE_SKIP_INSTALL_RPATH=ON \
 	-DCMAKE_SKIP_RPATH=ON \
 	-DCMAKE_EXPORT_COMPILE_COMMANDS=OFF \
