@@ -11,6 +11,7 @@ pacman -Syu --noconfirm \
 	catch2              \
 	cmake               \
 	curl                \
+	enet                \
 	fmt                 \
 	gamemode            \
 	gcc                 \
@@ -18,9 +19,13 @@ pacman -Syu --noconfirm \
 	libxi               \
 	libxkbcommon-x11    \
 	libxss              \
+	llvm                \
+	llvm-libs           \
+	lz4                 \
 	mbedtls2            \
 	mesa                \
 	ninja               \
+	nlohmann-json       \
 	openal              \
 	pipewire-audio      \
 	pulseaudio          \
