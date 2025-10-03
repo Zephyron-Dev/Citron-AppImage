@@ -11,7 +11,7 @@ URUNTIME="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs
 SHARUN="https://raw.githubusercontent.com/pkgforge-dev/Anylinux-AppImages/refs/heads/main/useful-tools/quick-sharun.sh"
 
 export ADD_HOOKS="self-updater.bg.hook"
-export UPINFO="gh-releases-zsync|${GITHUB_REPOSITORY%/*}|${GITHUB_REPOSITORY#*/}|latest|*$ARCH.AppImage.zsync"
+export UPINFO="gh-releases-zsync|citron-emu|citron-emulator|latest|*$ARCH.AppImage.zsync"
 export OUTNAME=Citron-"$VERSION"-anylinux-"$ARCH".AppImage
 export DESKTOP=/usr/share/applications/org.citron_emu.citron.desktop
 export ICON=/usr/share/icons/hicolor/scalable/apps/org.citron_emu.citron.svg

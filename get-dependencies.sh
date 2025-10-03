@@ -51,9 +51,6 @@ chmod +x ./get-debloated-pkgs.sh
 
 echo "Building citron..."
 echo "---------------------------------------------------------------"
-sed -i 's|EUID == 0|EUID == 69|g' /usr/bin/makepkg
-sed -i 's|-O2|-O3|; s|MAKEFLAGS=.*|MAKEFLAGS="-j$(nproc)"|; s|#MAKEFLAGS|MAKEFLAGS|' /etc/makepkg.conf
-cat /etc/makepkg.conf
 
 if [ "$1" = 'v3' ] && [ "$ARCH" = 'x86_64' ]; then
 	echo "Making x86-64-v3 optimized build of citron..."
@@ -67,27 +64,36 @@ else
 fi
 
 if [ "$DEVEL" = 'true' ]; then
-	citronpkg=citron-git
 	echo "Making nightly build..."
 else
-	citronpkg=citron
 	echo "Making stable build..."
 fi
 
-git clone https://aur.archlinux.org/"$citronpkg".git ./citron
+# Clone repository with submodules
+git clone --recursive --depth 1 https://git.citron-emu.org/citron/emulator.git ./citron
 cd ./citron
 
-sed -i \
-	-e "s|x86_64|$ARCH|g"                              \
-	-e 's|DISCORD_PRESENCE=ON|DISCORD_PRESENCE=OFF|'   \
-	-e 's|USE_QT_MULTIMEDIA=ON|USE_QT_MULTIMEDIA=OFF|' \
-	-e 's|BUILD_TYPE=None|BUILD_TYPE=Release|'         \
-	-e "s|\$CXXFLAGS|$ARCH_FLAGS|g"                    \
-	-e "s|\$CFLAGS|$ARCH_FLAGS|g"                      \
-	./PKGBUILD
-cat ./PKGBUILD
+# Configure CMake build
+mkdir -p build
+cd build
 
-makepkg -fs --noconfirm --skippgpcheck
-ls -la .
-pacman --noconfirm -U ./*.pkg.tar.*
-pacman -Q "$citronpkg" | awk '{print $2; exit}' > ~/version
+cmake .. \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_CXX_FLAGS="$ARCH_FLAGS" \
+	-DCMAKE_C_FLAGS="$ARCH_FLAGS" \
+	-DDISCORD_PRESENCE=OFF \
+	-DUSE_QT_MULTIMEDIA=OFF \
+	-DCMAKE_INSTALL_PREFIX=/usr
+
+make -j$(nproc)
+make install DESTDIR=/tmp/citron-install
+
+# Create version file
+if [ "$DEVEL" = 'true' ]; then
+	git rev-parse --short HEAD > ~/version
+else
+	git describe --tags --abbrev=0 > ~/version
+fi
+
+# Install to system
+cp -r /tmp/citron-install/* /
